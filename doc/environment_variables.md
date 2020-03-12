@@ -4,8 +4,14 @@ gRPC environment variables
 gRPC C core based implementations (those contained in this repository) expose
 some configuration as environment variables that can be set.
 
-* http_proxy
-  The URI of the proxy to use for HTTP CONNECT support.
+* grpc_proxy, https_proxy, http_proxy
+  The URI of the proxy to use for HTTP CONNECT support. These variables are
+  checked in order, and the first one that has a value is used.
+
+* no_grpc_proxy, no_proxy
+  A comma separated list of hostnames to connect to without using a proxy even
+  if a proxy is set. These variables are checked in order, and the first one
+  that has a value is used.
 
 * GRPC_ABORT_ON_LEAKS
   A debugging aid to cause a call to abort() when gRPC objects are leaked past
@@ -39,7 +45,6 @@ some configuration as environment variables that can be set.
   gRPC C core is processing requests via debug logs. Available tracers include:
   - api - traces api calls to the C core
   - bdp_estimator - traces behavior of bdp estimation logic
-  - call_combiner - traces call combiner state
   - call_error - traces the possible errors contributing to final call status
   - cares_resolver - traces operations of the c-ares based DNS resolver
   - cares_address_sorting - traces operations of the c-ares based DNS
@@ -52,9 +57,6 @@ some configuration as environment variables that can be set.
   - connectivity_state - traces connectivity state changes to channels
   - cronet - traces state in the cronet transport engine
   - executor - traces grpc's internal thread pool ('the executor')
-  - fd_trace - traces fd create(), shutdown() and close() calls for channel fds.
-    Also traces epoll fd create()/close() calls in epollex polling engine
-    traces epoll-fd creation/close calls for epollex polling engine
   - glb - traces the grpclb load balancer
   - handshaker - traces handshaking state
   - health_check_client - traces health checking client code
@@ -74,6 +76,7 @@ some configuration as environment variables that can be set.
   - queue_pluck
   - server_channel - lightweight trace of significant server channel events
   - secure_endpoint - traces bytes flowing through encrypted channels
+  - subchannel - traces the connectivity state of subchannel
   - timer - timers (alarms) in the grpc internals
   - timer_check - more detailed trace of timer logic in grpc internals
   - transport_security - traces metadata about secure channel establishment
@@ -85,10 +88,15 @@ some configuration as environment variables that can be set.
   - alarm_refcount - refcounting traces for grpc_alarm structure
   - metadata - tracks creation and mutation of metadata
   - combiner - traces combiner lock state
+  - call_combiner - traces call combiner state
   - closure - tracks closure creation, scheduling, and completion
+  - fd_trace - traces fd create(), shutdown() and close() calls for channel fds.
+    Also traces epoll fd create()/close() calls in epollex polling engine
+    traces epoll-fd creation/close calls for epollex polling engine
   - pending_tags - traces still-in-progress tags on completion queues
   - polling - traces the selected polling engine
   - polling_api - traces the api calls to polling engine
+  - subchannel_refcount
   - queue_refcount
   - error_refcount
   - stream_refcount
